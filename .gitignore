@@ -2,3 +2,10 @@ env/
 venv/
 __pycache__/
 trained/
+1_input_vids/
+2_input_imgs/
+3_labeled_imgs/
+3_unlabled_imgs/
+4_validated_imgs/
+5_ready_imgs/
+dataset/

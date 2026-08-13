@@ -2,10 +2,10 @@ import os
 from label import AutoLabeler
 
 if __name__ == "__main__":
-    INPUT = "./2input_imgs"
-    VALIDATED = "./4validated_imgs"
-    LABELED = "./3labled_imgs"
-    UNLABELDED = "./3unlabeled_imgs"
+    INPUT = "./2_input_imgs"
+    VALIDATED = "./4_validated_imgs"
+    LABELED = "./3_labled_imgs"
+    UNLABELDED = "./3_unlabeled_imgs"
 
     ontology = {
         "caption": "class",

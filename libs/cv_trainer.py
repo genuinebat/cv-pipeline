@@ -3,8 +3,8 @@ import yaml
 from ultralytics import YOLO
 
 class Trainer:
-    def __init__(self, _yaml):
-        self._yaml = _yaml
+    def __init__(self, yaml):
+        self._yaml = yaml
         self._model = YOLO('yolov8m.pt') 
 
     def train(self):

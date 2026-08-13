@@ -2,8 +2,8 @@ import os
 from label import LabelPreperation 
 
 if __name__ == "__main__":
-    CONV_INPUT = "./4validated_imgs"
-    CONV_OUTPUT = "./5ready_imgs"
+    CONV_INPUT = "./4_validated_imgs"
+    CONV_OUTPUT = "./5_ready_imgs"
 
     SPLIT_TRAIN = "./dataset/train"
     SPLIT_VAL = "./dataset/val" 
