@@ -1,0 +1,7 @@
+train: dataset/train
+val: dataset/val
+# test: training_data/test
+
+nc: 1
+names:
+  0: class 

@@ -1,0 +1,15 @@
+autodistill
+autodistill-grounding-dino
+opencv-python
+ollama
+scikit-learn
+scipy
+anylabeling
+roboflow
+supervision
+torch
+torchvision
+transformers==4.40.0
+diffusers
+ultralytics
+onnx
