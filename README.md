@@ -1,2 +1,2 @@
 ## Description
-Train CV model from videos
+Train get ONNX file for CV model trained from videos
