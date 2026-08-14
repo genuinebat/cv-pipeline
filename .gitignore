@@ -9,3 +9,4 @@ trained/
 4_validated_imgs/
 5_ready_imgs/
 dataset/
+*.pt

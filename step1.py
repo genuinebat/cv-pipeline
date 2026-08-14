@@ -1,14 +1,14 @@
 import os
-from image_preperation import VideoConverter 
+from libs.image_preperation import VideoConverter 
 
 if __name__ == "__main__":
-    INPUT = "./1_input_vids"
-    OUTPUT = "./2_input_imgs"
+    INPUT = "1_input_vids"
+    OUTPUT = "2_input_imgs"
 
     num_vids = len(os.listdir(INPUT))
     vc = VideoConverter(input_dir=INPUT, output_dir=OUTPUT)
     vc.convert_videos_to_images()
-    num_imgs = len(os.listdir(output_imgs))
+    num_imgs = len(os.listdir(OUTPUT))
 
     print(f"""
     ------------ Phase 1 Results ------------

@@ -1,23 +1,23 @@
 import os
-from label import AutoLabeler
+from libs.label import AutoLabeler
 
 if __name__ == "__main__":
-    INPUT = "./2_input_imgs"
-    VALIDATED = "./4_validated_imgs"
-    LABELED = "./3_labled_imgs"
-    UNLABELDED = "./3_unlabeled_imgs"
+    INPUT = "2_input_imgs"
+    VALIDATED = "4_validated_imgs"
+    LABELED = "3_labeled_imgs"
+    UNLABELDED = "3_unlabeled_imgs"
 
     ontology = {
-        "caption": "class",
+        "a Rubrik's cube that has a checkered pattern": "cube",
     }
 
     al = AutoLabeler(ont=ontology, input_dir=INPUT, validated_dir=VALIDATED, labeled_dir=LABELED, unlabeled_dir=UNLABELDED)
 
     al.label_and_validate()
     
-    labeled_validated= len(os.listdir(al.VALIDATED_DIR))
-    labeled = len(os.listdir(al.LABELED_DIR))
-    unlabled = len(os.listdir(al.UNLABELED_DIR))
+    labeled_validated= len(os.listdir(VALIDATED))//2
+    labeled = len(os.listdir(LABELED))//2
+    unlabled = len(os.listdir(UNLABELDED))//2
     total = labeled_validated+labeled+unlabled
 
     print(f"""

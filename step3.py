@@ -1,20 +1,24 @@
 import os
-from label import LabelPreperation 
+from libs.label import LabelPreperation as LP
 
 if __name__ == "__main__":
-    CONV_INPUT = "./4_validated_imgs"
-    CONV_OUTPUT = "./5_ready_imgs"
+    CONV_INPUT = "4_validated_imgs"
+    CONV_OUTPUT = "5_ready_imgs"
 
-    SPLIT_TRAIN = "./dataset/train"
-    SPLIT_VAL = "./dataset/val" 
+    SPLIT_TRAIN = "dataset/train"
+    SPLIT_VAL = "dataset/val" 
 
-    lp = LabelPreperation()
-    lp.convert_validated_json_labels_to_text(CONV_INPUT, CONV_OUTPUT)
+    class_map = {
+        "cube": 0
+    }
 
-    labels = [1 if f.endswith(".txt") else 0 for f in os.list_dir(OUTPUT)]
+    lp = LP(class_map=class_map)
+    lp.convert_validated_json_labels_to_text(input_dir=CONV_INPUT, output_dir=CONV_OUTPUT)
+
+    labels = [1 if f.endswith(".txt") else 0 for f in os.listdir(CONV_OUTPUT)]
     n = sum(labels) 
 
-    t, v, te = lp.split_data(input_dir = CONV_OUTPUT, output_train=SPLIT_TRAIN, output_val=SPLIT_VAL)
+    t, v, te = lp.split_data(input_dir=CONV_OUTPUT, output_train=SPLIT_TRAIN, output_val=SPLIT_VAL)
 
     print(f"""
     ------------ Phase 3 Results ------------
@@ -22,6 +26,6 @@ if __name__ == "__main__":
 
     Added {n} total label and image pair{"" if n == 1 else "s"} to dataset
     Added {t} label and image pair{"" if n == 1 else "s"} to training dataset
-    Added {n} label and image pair{"" if n == 1 else "s"} to validation dataset
+    Added {v} label and image pair{"" if n == 1 else "s"} to validation dataset
     Added {te} label and image pair{"" if n == 1 else "s"} to testing dataset
     """)

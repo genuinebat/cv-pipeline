@@ -1,9 +1,6 @@
 import cv2
 import os
 
-input_dir = "1input_vids"
-output_dir = "2input_imgs"
-
 class VideoConverter:
     _valid_extensions = ('.mp4', '.avi', '.mov', '.mkv', '.wmv', '.flv')
 

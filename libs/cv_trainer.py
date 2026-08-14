@@ -8,13 +8,13 @@ class Trainer:
         self._model = YOLO('yolov8m.pt') 
 
     def train(self):
-        results = model.train(
-            data=yaml,
-            epochs=50,
+        results = self._model.train(
+            data=self._yaml,
+            epochs=3,
             imgsz=640,
-            batch=16,
-            device=0, # 0 = GPU, cpu = CPU
-            project='trained',
+            batch=4,
+            device="cpu", # 0 = GPU, cpu = CPU
+            project=os.path.join(os.getcwd(), "trained"),
             name='cv_model'
         )
 

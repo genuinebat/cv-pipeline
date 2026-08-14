@@ -3,20 +3,23 @@ import shutil
 import cv2
 import ollama
 import json
+import random
+import math
 from autodistill_grounding_dino import GroundingDINO
 from autodistill.detection import CaptionOntology
 
 class AutoLabeler:
-    def __init__(self, ont, input_dir, validated_dir, labeled_dir, unlabled_dir):
+    def __init__(self, ont, input_dir, validated_dir, labeled_dir, unlabeled_dir):
         _ont = CaptionOntology(ont)
-        model = GroundingDINO(ontology=_ont)
-        self._classes = list(ont.classes()) 
+        self._model = GroundingDINO(ontology=_ont)
+        self._classes = list(_ont.classes()) 
         self._input_dir = input_dir
         self._validated_dir = validated_dir
         self._labeled_dir = labeled_dir
-        self._unlabeled_dir = unlabled_dir
+        self._unlabeled_dir = unlabeled_dir
 
     def label_and_validate(self):
+        print("LABELING IN PROGRESS...please wait a moment")
         for filename in os.listdir(self._input_dir):
             if not filename.lower().endswith(('.png', '.jpg', '.jpeg')):
                 continue
@@ -28,9 +31,10 @@ class AutoLabeler:
     
             img_h, img_w, _ = image.shape
     
-            detections = model.predict(img_path)
+            detections = self._model.predict(img_path)
     
             if len(detections.xyxy) < 1:
+                print(f"{os.path.basename(img_path)} could not be labeled")
                 shutil.move(img_path, os.path.join(self._unlabeled_dir, os.path.basename(img_path)))
                 continue
     
@@ -69,6 +73,8 @@ class AutoLabeler:
     
             with open(labeled_json_path, "w", encoding="utf-8") as f:
                 json.dump(label_data, f, indent=4)
+            
+            print(f"{filename} labeled successfully")
 
         
             is_valid_image = True
@@ -102,24 +108,26 @@ class AutoLabeler:
                     break
                     
             if is_valid_image:
+                print(f"{filename} passed secondary validation")
                 validated_img_path = os.path.join(self._validated_dir, filename)
                 validated_json_path = os.path.join(self._validated_dir, json_filename)
                 
                 shutil.move(labeled_img_path, validated_img_path)
                 shutil.move(labeled_json_path, validated_json_path)
+            else:
+                print(f"{filename} failed secondary validation")
 
 class LabelPreperation:
-    def __init__(self, input_dir, output_dir):
-        self._input_dir = input_dir
-        self._output_dir = output_dir
+    def __init__(self, class_map):
+        self._class_map = class_map
 
     def convert_validated_json_labels_to_text(self, input_dir, output_dir):
-        for f in os.listdir(self._input_dir):
+        for f in os.listdir(input_dir):
             if f.endswith(".jpg"):
-                shutil.copy(os.path.join(target, f), dest)
+                shutil.copy(os.path.join(input_dir, f), output_dir)
             elif f.endswith(".json"):
-                json_f = os.path.join(self._input_dir, f)
-                txt_f = os.path.join(self._output_dir, f.replace(".json", ".txt"))
+                json_f = os.path.join(input_dir, f)
+                txt_f = os.path.join(output_dir, f.replace(".json", ".txt"))
 
                 with open(json_f, "r") as jf:
                     data = json.load(jf)
@@ -129,10 +137,10 @@ class LabelPreperation:
                 with open(txt_f, 'w') as file:
                     for shape in data['shapes']:
                         label = shape['label'].lower()
-                        if label not in class_map:
+                        if label not in self._class_map:
                             continue
                             
-                        class_id = class_map[label]
+                        class_id = self._class_map[label]
                         
                         points = shape['points']
                         x1, y1 = points[0]
@@ -149,12 +157,12 @@ class LabelPreperation:
 
     def split_data(self, input_dir, output_train, output_val, output_test=None)-> tuple[int, int, int]:
         all_files = os.listdir(input_dir)
-        image_files = [f for f in all_files if f.lower().endswith(image_exts)]
+        image_files = [f for f in all_files if f.lower().endswith(".jpg")]
         
         paired_data = []
         for img_file in image_files:
             base_name = os.path.splitext(img_file)[0]
-            lbl_file = base_name + label_ext
+            lbl_file = base_name + ".txt" 
             
             if lbl_file in all_files:
                 paired_data.append((img_file, lbl_file))

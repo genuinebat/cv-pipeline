@@ -13,3 +13,4 @@ transformers==4.40.0
 diffusers
 ultralytics
 onnx
+onnxruntime
